@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { NotificationProvider } from './contexts/NotificationContext'
 import Navbar from './components/Navbar'
 import Dashboard from './pages/Dashboard'
 import CreateDocument from './pages/CreateDocument'
@@ -101,19 +102,21 @@ const AppContent = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
-          }}
-        />
-      </Router>
+      <NotificationProvider>
+        <Router>
+          <AppContent />
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+            }}
+          />
+        </Router>
+      </NotificationProvider>
     </AuthProvider>
   )
 }

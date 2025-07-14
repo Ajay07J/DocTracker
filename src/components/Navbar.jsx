@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { LogOut, FileText, User, Shield } from 'lucide-react'
+import NotificationDropdown from './NotificationDropdown'
 
 const Navbar = () => {
   const { user, profile, signOut } = useAuth()
@@ -61,6 +62,9 @@ const Navbar = () => {
                 )}
               </div>
             )}
+            
+            {/* Notifications */}
+            <NotificationDropdown />
             
             <button
               onClick={handleSignOut}

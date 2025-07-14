@@ -1,0 +1,22 @@
+{
+  "name": "Document Tracker",
+  "short_name": "DocTracker",
+  "description": "Track document signatures and approvals for your club",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "permissions": [
+    "notifications"
+  ],
+  "notification": {
+    "preference": "granted"
+  }
+}
