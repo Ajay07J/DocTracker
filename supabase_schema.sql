@@ -197,7 +197,7 @@ CREATE TRIGGER on_auth_user_created
 
 -- Storage bucket for document files
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('documents', 'documents', false);
+VALUES ('documents', 'documents', true);
 
 -- Storage policy for documents bucket
 CREATE POLICY "Authenticated users can upload documents" ON storage.objects
@@ -218,3 +218,6 @@ CREATE POLICY "Document owners and admins can delete documents" ON storage.objec
         (auth.uid()::text = (storage.foldername(name))[1] OR
          EXISTS (SELECT 1 FROM users WHERE users.id = auth.uid() AND users.role = 'admin'))
     );
+
+-- Insert admin secret for validation
+INSERT INTO app_config (key, value) VALUES ('admin_secret', '1234');
