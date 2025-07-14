@@ -379,58 +379,10 @@ const DocumentDetails = () => {
                   </div>
                 </div>
                 
-                <div className="p-6">
-                  {document.admin_approved === null ? (
-                    // Pending approval
-                    <div>
-                      <div className="flex items-center mb-4">
-                        <Clock className="h-5 w-5 text-orange-500 mr-2" />
-                        <span className="text-orange-700 font-medium">Awaiting admin approval</span>
-                      </div>
-                      
-                      {profile?.role === 'admin' ? (
-                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                          <p className="text-orange-800 mb-4 font-medium">
-                            As an admin, you can approve or reject this document:
-                          </p>
-                          <div className="flex flex-col sm:flex-row gap-3">
-                            <button
-                              onClick={() => handleAdminApproval(true)}
-                              disabled={approvingDocument}
-                              className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
-                            >
-                              {approvingDocument ? (
-                                <LoadingSpinner size="sm" className="mr-2" />
-                              ) : (
-                                <ThumbsUp className="h-5 w-5 mr-2" />
-                              )}
-                              Approve Document
-                            </button>
-                            <button
-                              onClick={() => handleAdminApproval(false)}
-                              disabled={approvingDocument}
-                              className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
-                            >
-                              {approvingDocument ? (
-                                <LoadingSpinner size="sm" className="mr-2" />
-                              ) : (
-                                <ThumbsDown className="h-5 w-5 mr-2" />
-                              )}
-                              Reject Document
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                          <p className="text-yellow-800">
-                            This document is waiting for admin approval before signatures can be collected.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    // Approved or rejected
-                    <div className={`border rounded-lg p-4 ${
+                <div className="p-6 space-y-6">
+                  {/* Current Status Display */}
+                  {document.admin_approved !== null && (
+                    <div className={`border-2 rounded-xl p-4 ${
                       document.admin_approved 
                         ? 'bg-green-50 border-green-200' 
                         : 'bg-red-50 border-red-200'
@@ -444,7 +396,7 @@ const DocumentDetails = () => {
                         <span className={`font-semibold text-lg ${
                           document.admin_approved ? 'text-green-800' : 'text-red-800'
                         }`}>
-                          {document.admin_approved ? 'Document Approved' : 'Document Rejected'}
+                          Current Status: {document.admin_approved ? 'Approved' : 'Rejected'}
                         </span>
                       </div>
                       
@@ -458,15 +410,108 @@ const DocumentDetails = () => {
                       )}
                       
                       {document.admin_approved && (
-                        <p className="text-green-700 text-sm mt-2">
+                        <p className="text-green-700 text-sm mt-2 font-medium">
                           ✓ Signatures can now be collected
                         </p>
                       )}
                       
                       {!document.admin_approved && (
-                        <p className="text-red-700 text-sm mt-2">
+                        <p className="text-red-700 text-sm mt-2 font-medium">
                           ✗ Document cannot proceed until approved
                         </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Admin Controls - Always show for admins */}
+                  {profile?.role === 'admin' ? (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6">
+                      <div className="flex items-center mb-4">
+                        <Shield className="h-6 w-6 text-blue-600 mr-3" />
+                        <div>
+                          <h3 className="text-lg font-semibold text-blue-900">Admin Controls</h3>
+                          <p className="text-blue-700 text-sm">
+                            {document.admin_approved === null 
+                              ? 'Make your decision on this document:'
+                              : 'Change your decision if needed:'
+                            }
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                          onClick={() => handleAdminApproval(true)}
+                          disabled={approvingDocument}
+                          className={`flex-1 px-6 py-4 rounded-xl font-semibold flex items-center justify-center transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg ${
+                            document.admin_approved === true
+                              ? 'bg-green-600 text-white border-2 border-green-700'
+                              : 'bg-green-100 hover:bg-green-200 text-green-800 border-2 border-green-300 hover:border-green-400'
+                          } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                          {approvingDocument ? (
+                            <LoadingSpinner size="sm" className="mr-2" />
+                          ) : (
+                            <ThumbsUp className="h-5 w-5 mr-3" />
+                          )}
+                          {document.admin_approved === true ? 'Currently Approved' : 'Approve Document'}
+                        </button>
+
+                        <button
+                          onClick={() => handleAdminApproval(false)}
+                          disabled={approvingDocument}
+                          className={`flex-1 px-6 py-4 rounded-xl font-semibold flex items-center justify-center transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg ${
+                            document.admin_approved === false
+                              ? 'bg-red-600 text-white border-2 border-red-700'
+                              : 'bg-red-100 hover:bg-red-200 text-red-800 border-2 border-red-300 hover:border-red-400'
+                          } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                          {approvingDocument ? (
+                            <LoadingSpinner size="sm" className="mr-2" />
+                          ) : (
+                            <ThumbsDown className="h-5 w-5 mr-3" />
+                          )}
+                          {document.admin_approved === false ? 'Currently Rejected' : 'Reject Document'}
+                        </button>
+                      </div>
+
+                      <div className="mt-4 p-3 bg-blue-100 rounded-lg">
+                        <p className="text-blue-800 text-sm flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-2" />
+                          <span>
+                            <strong>Note:</strong> You can change your decision at any time. 
+                            {document.admin_approved === false && ' Rejected documents cannot collect signatures until approved.'}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    // Non-admin users
+                    <div className="text-center py-8">
+                      {document.admin_approved === null ? (
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                          <Clock className="mx-auto h-12 w-12 text-yellow-500 mb-4" />
+                          <h3 className="text-lg font-semibold text-yellow-800 mb-2">Awaiting Admin Approval</h3>
+                          <p className="text-yellow-700">
+                            This document is waiting for admin approval before signatures can be collected.
+                          </p>
+                        </div>
+                      ) : document.admin_approved ? (
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                          <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-4" />
+                          <h3 className="text-lg font-semibold text-green-800 mb-2">Document Approved</h3>
+                          <p className="text-green-700">
+                            This document has been approved and signatures can now be collected.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                          <X className="mx-auto h-12 w-12 text-red-500 mb-4" />
+                          <h3 className="text-lg font-semibold text-red-800 mb-2">Document Rejected</h3>
+                          <p className="text-red-700">
+                            This document has been rejected and cannot proceed until approved by an admin.
+                          </p>
+                        </div>
                       )}
                     </div>
                   )}
